@@ -1,0 +1,37 @@
+
+2.
+
+No, it should synchronized
+
+Lets take transaction A -> B and B -> C
+
+A 	->	B	|	B	->	C
+100		50		50		100
+
+Let A have 100, B have 50 and C have 100.
+Total balance in total accounts is 250.
+
+Now A will transfer 50 to B.
+Before B gets A's transfer, B starts transfer 50 to C.
+
+A 	->	B	|	B	->	C
+50		50		0		100
+	50				50
+
+In this instance, If B is still locked for transfer
+between B to C, 50 is reduced from A, 50 is reduced from B
+if that 50 not deposited in C,
+the total balance in the accounts reduce to 150.
+
+
+
+4.
+
+A deadblock can be formed if a transaction
+A 	->	B	|	B	->	A
+
+At first a thread(1) locks A and before transferring amount to B,
+Another thread(2) locks B and it tries to transfer its amount to
+A. At this A is locked by thread(1) and B is locked by thread(2).
+So transfer is blocked for both A and B. Threre is no way program
+run after this situation.
